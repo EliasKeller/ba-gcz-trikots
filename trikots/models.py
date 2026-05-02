@@ -64,3 +64,24 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
+class SeasonClub(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    description = models.TextField(max_length=1000, null=True, blank=True)
+    presidents = models.ManyToManyField(
+        Person,
+        related_name="president_season_clubs",
+        blank=True
+    )
+    captains = models.ManyToManyField(
+        Person,
+        related_name="captain_season_clubs",
+        blank=True
+    )
+    trainers = models.ManyToManyField(
+        Person,
+        related_name="trainer_season_clubs",
+        blank=True
+    )
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, null=True, blank=True)
