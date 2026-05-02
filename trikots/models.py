@@ -68,7 +68,7 @@ class SeasonClub(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    description = models.TextField(max_length=1000, null=True, blank=True)
+    description = models.TextField(max_length=2000, null=True, blank=True)
     presidents = models.ManyToManyField(
         Person,
         related_name="president_season_clubs",
@@ -85,3 +85,6 @@ class SeasonClub(models.Model):
         blank=True
     )
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.season} - {self.club}"
