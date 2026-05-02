@@ -48,3 +48,12 @@ class Season(models.Model):
 
     def __str__(self):
         return f"{self.name} {str(self.startYear)[-2:]}/{str(self.endYear)[-2:]}"
+
+class Person(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.first_name + " " + self.last_name
+
