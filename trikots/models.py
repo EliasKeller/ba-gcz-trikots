@@ -1,6 +1,10 @@
 import uuid
 
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
+from django.views.decorators.csrf import requires_csrf_token
+
 
 class Country(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -29,8 +33,17 @@ class League(models.Model):
 class Season(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True)
-    startYear = models.IntegerField()
-    endYear = models.IntegerField()
+    startYear = models.IntegerField(validators=[MinValueValidator(1001, "Jahreszahl muss valid sein.")])
+    endYear = models.IntegerField(validators=[MinValueValidator(1001,"Jahreszahl muss valid sein.")])
+
+    def clean(self):
+        if self.startYear is None or self.endYear is None:
+            return
+
+        if self.startYear >= self.endYear:
+            raise ValidationError({
+                'endYear': 'Endjahr muss grösser als Startjahr sein.'
+            })
 
     def __str__(self):
         return self.name
