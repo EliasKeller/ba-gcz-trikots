@@ -43,9 +43,6 @@ class Season(models.Model):
         MaxValueValidator(max_year(), "Jahreszahl ist zu gross.")
     ])
 
-    def max_year(self):
-        return datetime.now().year + 1
-
     def clean(self):
         validate_year_range(self.startYear, self.endYear)
 
