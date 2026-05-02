@@ -1,9 +1,10 @@
 import uuid
-
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.views.decorators.csrf import requires_csrf_token
+from datetime import datetime
+
+from trikots.validators import max_year, validate_year_range
 
 
 class Country(models.Model):
@@ -33,17 +34,20 @@ class League(models.Model):
 class Season(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True)
-    startYear = models.IntegerField(validators=[MinValueValidator(1001, "Jahreszahl muss valid sein.")])
-    endYear = models.IntegerField(validators=[MinValueValidator(1001,"Jahreszahl muss valid sein.")])
+    startYear = models.IntegerField(validators=[
+        MinValueValidator(1001, "Jahreszahl muss valid sein."),
+        MaxValueValidator(max_year(), "Jahreszahl ist zu gross.")
+    ])
+    endYear = models.IntegerField(validators=[
+        MinValueValidator(1001,"Jahreszahl muss valid sein."),
+        MaxValueValidator(max_year(), "Jahreszahl ist zu gross.")
+    ])
+
+    def max_year(self):
+        return datetime.now().year + 1
 
     def clean(self):
-        if self.startYear is None or self.endYear is None:
-            return
-
-        if self.startYear >= self.endYear:
-            raise ValidationError({
-                'endYear': 'Endjahr muss grösser als Startjahr sein.'
-            })
+        validate_year_range(self.startYear, self.endYear)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} {str(self.startYear)[-2:]}/{str(self.endYear)[-2:]}"
