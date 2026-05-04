@@ -1,5 +1,17 @@
 asgiref==3.11.1
+certifi==2026.4.22
+charset-normalizer==3.4.7
+ciso8601==2.3.3
 Django==6.0.4
+glob2==0.7
+idna==3.13
+lxml==6.1.0
+orjson==3.11.8
+pillow==12.2.0
 psycopg2-binary==2.9.12
 python-dotenv==1.2.2
+PyYAML==6.0.3
+requests==2.33.1
+requests-viewer==0.0.12
 sqlparse==0.5.5
+urllib3==2.6.3

@@ -114,3 +114,26 @@ class Match(models.Model):
 
     def __str__(self):
         return f"{self.home_club} - {self.away_club} ({self.goals_home}:{self.goals_away}) - {self.date}"
+
+
+class Shirt(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    number = models.IntegerField(null=True, blank=True)
+    image = models.ImageField(upload_to="shirt_images")
+    description = models.TextField(max_length=2000, null=True, blank=True)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    match_worn = models.BooleanField(default=False)
+    player = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)
+    purchase_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        if self.number and self.player and self.match:
+            return f"{self.number } - {self.player.first_name} {self.player.last_name} - {self.club}"
+
+        if self.number and self.player:
+            return f"{self.player.first_name} {self.player.last_name} - {self.club}"
+
+        return f"Shirt - {self.club}"
