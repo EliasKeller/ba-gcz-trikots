@@ -18,3 +18,12 @@ def validate_year_range(start, end):
         raise ValidationError({
             'endYear': 'Start- und Endjahr müssen ein Jahr auseinander liegen.'
         })
+
+def validate_match_home_away_club(home_club_id, away_club_id):
+    if home_club_id is None or away_club_id is None:
+        return
+
+    if home_club_id == away_club_id:
+        raise ValidationError({
+            'away_club': 'Heim- und Auswärtsteam müssen unterschiedlich sein.'
+        })

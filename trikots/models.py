@@ -2,7 +2,7 @@ import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from trikots.validators import max_year, validate_year_range
+from trikots.validators import max_year, validate_year_range, validate_match_home_away_club
 
 
 class Country(models.Model):
@@ -52,6 +52,15 @@ class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
 
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["first_name", "last_name"],
+                name="unique_person_full_name"
+            )
+        ]
+
     def __str__(self):
         return self.first_name + " " + self.last_name
 
@@ -86,3 +95,22 @@ class SeasonClub(models.Model):
 
     def __str__(self):
         return f"{self.season} - {self.club}"
+
+class Match(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    home_club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="home_club")
+    away_club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="away_club")
+    goals_home = models.IntegerField(validators=[MinValueValidator(0, "Das Resultat muss positiv sein.")])
+    goals_away = models.IntegerField(validators=[MinValueValidator(0, "Das Resultat muss positiv sein.")])
+    goal_scorers = models.ManyToManyField(
+        Person,
+        related_name="goal_scorer",
+        blank=True
+    )
+    date = models.DateField()
+
+    def clean(self):
+        validate_match_home_away_club(self.home_club_id, self.away_club_id)
+
+    def __str__(self):
+        return f"{self.home_club} - {self.away_club} ({self.goals_home}:{self.goals_away}) - {self.date}"
