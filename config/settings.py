@@ -27,6 +27,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -97,19 +98,61 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
+JAZZMIN_SETTINGS = {
+    "site_title": "GCZ Trikots",
+    "site_header": "GCZ-Trikots",
+    "site_brand": "GCZ-Trikots",
+    "site_logo": "logo/gcz-trikots-logo.png",
+    "login_logo": "logo/gcz-trikots-logo.png",
+    "custom_css": "css/custom.css",
+    "site_logo_classes": "gcz-logo",
 
-LANGUAGE_CODE = 'en-us'
+    "welcome_sign": "Willkommen Ruedi",
+    "copyright": "© GCZ Trikots",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth.User": "fas fa-user-shield",
+        "trikots.Match": "fas fa-futbol",
+        "trikots.Club": "fas fa-shield-alt",
+        "trikots.Country": "fas fa-flag",
+        "trikots.League": "fas fa-trophy",
+        "trikots.Person": "fas fa-user",
+        "trikots.SeasonClub": "fas fa-layer-group",
+        "trikots.Season": "fas fa-calendar-alt",
+        "trikots.Shirt": "fas fa-tshirt",
+        "trikots.Supplier": "fas fa-industry",
+    },
+}
 
+JAZZMIN_UI_TWEAKS = {
+
+    # =========================
+    # THEME (extrem wichtig)
+    # =========================
+    "theme": "flatly",               # clean modern
+    "default_theme_mode": "auto",    # folgt System (dark/light)
+
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
+LANGUAGE_CODE = 'de-ch'
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]

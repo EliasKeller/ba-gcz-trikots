@@ -1,0 +1,15 @@
+.gcz-logo {
+    height: 80px;              /* saubere Admin-Größe */
+    width: auto;
+    object-fit: contain;       /* verhindert Verzerrung */
+    background-color: white;   /* wichtig wegen Transparenz */
+    padding: 4px;
+    border-radius: 8px;        /* leicht modern */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* subtiler Schatten */
+    transition: all 0.2s ease;
+}
+
+.gcz-logo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
