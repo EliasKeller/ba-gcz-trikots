@@ -126,3 +126,47 @@
     padding: 0 16px !important;
     margin-left: 0 !important; /* überschreibt inline margin */
 }
+
+/* =========================
+   ICONS IN DETAIL VIEW
+========================= */
+
+/* Alte Icons verstecken */
+.related-widget-wrapper-link img {
+    display: none;
+}
+
+/* Icons neu setzen */
+.related-widget-wrapper-link {
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+/* EDIT */
+.related-widget-wrapper-link.change-related::before {
+    content: "\f044"; /* pencil */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #3498db;
+}
+
+/* ADD */
+.related-widget-wrapper-link.add-related::before {
+    content: "\f067"; /* plus */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #18bc9c;
+}
+
+/* VIEW */
+.related-widget-wrapper-link.view-related::before {
+    content: "\f06e"; /* eye */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #3498db;
+}
+
+/* Hover nicer */
+.related-widget-wrapper-link:hover::before {
+    opacity: 0.7;
+}
