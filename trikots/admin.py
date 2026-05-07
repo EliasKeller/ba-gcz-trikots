@@ -32,6 +32,7 @@ class CountryAdmin(admin.ModelAdmin):
     ordering = ["name"]
 
     list_per_page = MAX_LIST_SIZE
+    search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + ",".join(search_fields)
 
 @admin.register(Club)
 class ClubAdmin(admin.ModelAdmin):
