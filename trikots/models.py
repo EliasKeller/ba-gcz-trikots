@@ -108,20 +108,20 @@ class SeasonClub(models.Model):
         Person,
         related_name="president_season_clubs",
         blank=True,
-        verbose_name="Präsident/(-e)"
+        verbose_name="Präsidenten"
     )
     captains = models.ManyToManyField(
         Person,
         related_name="captain_season_clubs",
         blank=True,
-        verbose_name="Käptain/(-e)"
+        verbose_name="Kaptains"
 
     )
     trainers = models.ManyToManyField(
         Person,
         related_name="trainer_season_clubs",
         blank=True,
-        verbose_name="Trainer/(-innen)"
+        verbose_name="Trainer"
     )
     supplier = models.ForeignKey(
         Supplier,
