@@ -4,9 +4,6 @@ from django.utils.html import format_html
 from trikots.filter import CountryFilter, LeagueFilter
 from trikots.models import Country, Club, League, Season, Person, Supplier, SeasonClub, Match, Shirt
 
-#TODO: Shirt und Spiele noch final machen
-admin.site.register(Shirt)
-
 MAX_LIST_SIZE = 25
 SEARCH_FIELD_PREFIX_PLACEHOLDER = "Such nach "
 
@@ -99,26 +96,39 @@ class MatchAdmin(admin.ModelAdmin):
         "date",
         "home_club",
         "away_club",
+        "get_goal_scorers",
         "result_colored",
     ]
 
     search_fields = [
         "home_club__name",
         "away_club__name",
+        "goal_scorers__first_name",
+        "goal_scorers__last_name",
     ]
 
     list_filter = [
         "date",
         "home_club",
         "away_club",
+        "goal_scorers"
     ]
+
+    def get_goal_scorers(self, obj):
+        return ", ".join(
+            [f"{p.first_name} {p.last_name}" for p in obj.goal_scorers.all()]
+        )
+
+    get_goal_scorers.short_description = "Torschützen"
+
+    search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Datum, Heimclub..."
+
 
     ordering = ["-date"]
 
     list_select_related = ["home_club", "away_club"]
 
     list_per_page = MAX_LIST_SIZE
-    search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + ", ".join(search_fields)
 
     def result_colored(self, obj):
         return format_html(
@@ -192,9 +202,7 @@ class SeasonClubAdmin(admin.ModelAdmin):
 
     list_per_page = MAX_LIST_SIZE
 
-    search_help_text = (
-        "Suche nach Saison, Club, Präsidenten..."
-    )
+    search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Saison, Club, Präsidenten..."
 
     def get_presidents(self, obj):
         return ", ".join(
@@ -242,6 +250,50 @@ class ClubAdmin(admin.ModelAdmin):
     ]
 
     ordering = ["league"]
+
+    search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Liga, Bezeichnung..."
+    list_per_page = MAX_LIST_SIZE
+
+@admin.register(Shirt)
+class ShirtAdmin(admin.ModelAdmin):
+
+    list_display = [
+        "number",
+        "club",
+        "season",
+        "match_worn",
+        "player",
+        "match",
+        "price",
+        "purchase_date",
+    ]
+
+    search_fields = [
+        "number",
+        "club__name",
+        "season__name",
+        "season__league__name",
+        "season__league__name",
+        "player__first_name",
+        "player__last_name",
+        "match__home_club__name",
+        "match__away_club__name",
+        "price",
+        "purchase_date",
+    ]
+
+    list_filter = [
+        "number",
+        "club",
+        "season",
+        "player",
+        "match",
+        "match_worn",
+        "price",
+        "purchase_date",
+    ]
+
+    ordering = ["number"]
 
     search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Liga, Bezeichnung..."
     list_per_page = MAX_LIST_SIZE
