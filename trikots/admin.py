@@ -1,8 +1,15 @@
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
+from django.template.response import TemplateResponse
 from django.utils.html import format_html
+from django.contrib.admin import AdminSite
+from django.db.models import Count, Sum, Avg
 
 from trikots.filter import CountryFilter, LeagueFilter
 from trikots.models import Country, Club, League, Season, Person, Supplier, SeasonClub, Match, Shirt
+
+
+
 
 MAX_LIST_SIZE = 25
 SEARCH_FIELD_PREFIX_PLACEHOLDER = "Such nach "
@@ -297,3 +304,61 @@ class ShirtAdmin(admin.ModelAdmin):
 
     search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Liga, Bezeichnung..."
     list_per_page = MAX_LIST_SIZE
+
+
+# -----------------------------
+#           DASHBOARD
+# -----------------------------
+
+@staff_member_required
+def custom_admin_dashboard(request):
+    context = admin.site.each_context(request)
+
+    context["shirt_count"] = Shirt.objects.count()
+    context["match_worn_count"] = Shirt.objects.filter(
+        match_worn=True
+    ).count()
+
+    context["total_value"] = (
+        Shirt.objects.aggregate(
+            Sum("price")
+        )["price__sum"] or 0
+    )
+
+    context["average_price"] = round(
+        (
+            Shirt.objects.aggregate(
+                Avg("price")
+            )["price__avg"] or 0
+        ),
+        2
+    )
+
+    context["top_clubs"] = (
+        Shirt.objects
+        .values("club__name")
+        .annotate(total=Count("id"))
+        .order_by("-total")[:5]
+    )
+
+    context["top_players"] = (
+        Shirt.objects
+        .exclude(player=None)
+        .values(
+            "player__first_name",
+            "player__last_name"
+        )
+        .annotate(total=Count("id"))
+        .order_by("-total")[:5]
+    )
+
+    context["club_count"] = Club.objects.count()
+    context["league_count"] = League.objects.count()
+    context["player_count"] = Person.objects.count()
+    context["season_count"] = Season.objects.count()
+
+    return TemplateResponse(
+        request,
+        "admin/index.html",
+        context
+    )
