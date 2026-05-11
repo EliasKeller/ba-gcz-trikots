@@ -52,7 +52,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,6 +111,17 @@ JAZZMIN_SETTINGS = {
     "copyright": "© GCZ Trikots",
     "show_sidebar": True,
     "navigation_expanded": True,
+    "order_with_respect_to": [
+        "trikots.Shirt",
+        "trikots.Match",
+        "trikots.Club",
+        "trikots.League",
+        "trikots.Season",
+        "trikots.SeasonClub",
+        "trikots.Country",
+        "trikots.Person",
+        "trikots.Supplier",
+    ],
     "icons": {
         "auth.User": "fas fa-user-shield",
         "trikots.Match": "fas fa-futbol",
