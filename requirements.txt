@@ -2,6 +2,7 @@ asgiref==3.11.1
 certifi==2026.4.22
 charset-normalizer==3.4.7
 ciso8601==2.3.3
+dj-database-url==3.1.2
 Django==6.0.4
 django-jazzmin==3.0.4
 glob2==0.7

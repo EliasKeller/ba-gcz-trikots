@@ -14,3 +14,7 @@ python manage.py migrate
  
 # deactivate venv
 deactivate
+
+# Local Heroku Console
+heroku login
+heroku run bash --app <appID>
