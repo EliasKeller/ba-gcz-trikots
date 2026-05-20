@@ -1,5 +1,7 @@
+import os
 import uuid
 
+import cloudinary.uploader
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -183,7 +185,7 @@ class Match(models.Model):
 class Shirt(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     number = models.IntegerField(null=True, blank=True, verbose_name="Trikotnummer")
-    image = models.ImageField(upload_to="shirt_images", verbose_name="Bild")
+    image = models.ImageField(upload_to=f"{os.getenv('CLOUDINARY_FOLDER', 'shirts_DEV')}/", verbose_name="Bild")
     description = models.TextField(max_length=2000, null=True, blank=True, verbose_name="Beschreibung")
     club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name="Club")
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name="Saison")
@@ -204,6 +206,23 @@ class Shirt(models.Model):
     )
     price = models.IntegerField(null=True, blank=True, verbose_name="Preis")
     purchase_date = models.DateField(null=True, blank=True, verbose_name="Kaufdatum")
+
+    # Override DELETE => delete image on Cloudinary (DB only source of truth)
+    def delete(self, *args, **kwargs):
+        if self.image:
+            cloudinary.uploader.destroy(self.image.name)
+        super().delete(*args, **kwargs)
+
+    # Override SAVE => if images changes => delete old one (DB only source of truth)
+    def save(self, *args, **kwargs):
+        if self.pk:
+            try:
+                old_image = Shirt.objects.get(pk=self.pk).image
+                if old_image and old_image != self.image:
+                    cloudinary.uploader.destroy(old_image.name)
+            except Shirt.DoesNotExist:
+                pass
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Trikot"

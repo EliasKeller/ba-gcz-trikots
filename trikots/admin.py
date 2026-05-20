@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
-from django.contrib.admin import AdminSite
 from django.db.models import Count, Sum, Avg
 
 from trikots.filter import CountryFilter, LeagueFilter
@@ -263,6 +262,25 @@ class ClubAdmin(admin.ModelAdmin):
 
 @admin.register(Shirt)
 class ShirtAdmin(admin.ModelAdmin):
+    readonly_fields = ['image_preview']
+
+    fieldsets = [
+        (None, {
+            'fields': [
+                'image_preview',
+                'image',
+                'number',
+                'club',
+                'season',
+                'match_worn',
+                'player',
+                'match',
+                'price',
+                'purchase_date',
+                'description',
+            ]
+        }),
+    ]
 
     list_display = [
         "number",
@@ -279,7 +297,6 @@ class ShirtAdmin(admin.ModelAdmin):
         "number",
         "club__name",
         "season__name",
-        "season__league__name",
         "season__league__name",
         "player__first_name",
         "player__last_name",
@@ -304,6 +321,13 @@ class ShirtAdmin(admin.ModelAdmin):
 
     search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Liga, Bezeichnung..."
     list_per_page = MAX_LIST_SIZE
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="max-height: 300px;"/>', obj.image.url)
+        return "Kein Bild"
+
+    image_preview.short_description = "Vorschau"
 
 
 # -----------------------------
