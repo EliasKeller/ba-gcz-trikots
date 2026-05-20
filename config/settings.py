@@ -23,12 +23,16 @@ SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-key")
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-#fix before going into prod
-ALLOWED_HOSTS = ["*"]
+if os.getenv('DATABASE_URL'):
+    ALLOWED_HOSTS = [
+        'admin.gcz-trikots.eliaskeller.ch',
+        'ba-gcz-trikots-0ceb3b32aac2.herokuapp.com',
+    ]
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
