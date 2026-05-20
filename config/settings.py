@@ -187,7 +187,5 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
-
-print("CLOUDINARY NAME:", os.getenv('CLOUDINARY_CLOUD_NAME'))
-print("CLOUDINARY KEY:", os.getenv('CLOUDINARY_API_KEY'))
-print('API_SECRET:', os.getenv('CLOUDINARY_API_SECRET')),
+# Für django-cloudinary-storage Kompatibilität
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
