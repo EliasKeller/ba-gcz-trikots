@@ -181,11 +181,9 @@ MEDIA_URL = '/media/'
 
 STORAGES = {
     "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-# Für django-cloudinary-storage Kompatibilität
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
