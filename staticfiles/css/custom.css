@@ -1,0 +1,172 @@
+.gcz-logo {
+    height: 80px;              /* saubere Admin-Größe */
+    width: auto;
+    object-fit: contain;       /* verhindert Verzerrung */
+    background-color: white;   /* wichtig wegen Transparenz */
+    padding: 4px;
+    border-radius: 8px;        /* leicht modern */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* subtiler Schatten */
+    transition: all 0.2s ease;
+}
+
+.gcz-logo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   FILTER BAR FIX
+========================= */
+#changelist-search, #change-list-actions  {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Jede Filter-Box */
+#changelist-search .form-group {
+    flex: 0 0 200px;
+    margin-bottom: 0;
+}
+
+/* SELECT2 Container (das sichtbare Dropdown) */
+#changelist-search .select2-container {
+    width: 100% !important;
+}
+
+/* Select2 Auswahlfeld */
+#changelist-search .select2-selection {
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+}
+
+
+/* Text im Select */
+#changelist-search .select2-selection__rendered {
+    line-height: 40px !important;
+}
+
+/* Search Input */
+#changelist-search input[type="text"] {
+    flex: 0 0 300px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+/* Arrow of Dropdown */
+#changelist-search .select2-selection__arrow {
+ top: unset;
+}
+
+/* Select2 (falls dort verwendet wird) */
+#change-list-actions .select2-container {
+    width: 200px !important;
+    height: 40px !important;
+}
+
+/* Button */
+#changelist-search button {
+    height: 40px;
+    border-radius: 8px;
+    padding: 0 16px;
+}
+
+/* =========================
+   CHANGE LIST ACTIONS
+========================= */
+
+.change-list-actions .actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+    align-items: center !important;
+}
+
+/* Label verhält sich wie form-group */
+.change-list-actions .actions label {
+    flex: 0 0 200px !important;
+    margin-bottom: 0 !important;
+}
+
+/* SELECT2 Container */
+.change-list-actions .select2-container {
+    width: 100% !important;
+}
+
+/* Select2 Auswahlfeld */
+.change-list-actions .select2-selection {
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    border-radius: 8px !important;
+    width: 200px;
+}
+
+/* Text im Select */
+.change-list-actions .select2-selection__rendered {
+    line-height: 40px !important;
+}
+
+/* Arrow fix */
+.change-list-actions .select2-selection__arrow {
+    top: 7px !important;
+}
+
+.change-list-actions .actions label {
+    flex: 0 0 auto !important;
+}
+
+/* Button */
+.change-list-actions button {
+    height: 40px !important;
+    border-radius: 8px !important;
+    padding: 0 16px !important;
+    margin-left: 0 !important; /* überschreibt inline margin */
+}
+
+/* =========================
+   ICONS IN DETAIL VIEW
+========================= */
+
+/* Alte Icons verstecken */
+.related-widget-wrapper-link img {
+    display: none;
+}
+
+/* Icons neu setzen */
+.related-widget-wrapper-link {
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+/* EDIT */
+.related-widget-wrapper-link.change-related::before {
+    content: "\f044"; /* pencil */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #3498db;
+}
+
+/* ADD */
+.related-widget-wrapper-link.add-related::before {
+    content: "\f067"; /* plus */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #18bc9c;
+}
+
+/* VIEW */
+.related-widget-wrapper-link.view-related::before {
+    content: "\f06e"; /* eye */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #3498db;
+}
+
+/* Hover nicer */
+.related-widget-wrapper-link:hover::before {
+    opacity: 0.7;
+}
