@@ -262,13 +262,13 @@ class ClubAdmin(admin.ModelAdmin):
 
 @admin.register(Shirt)
 class ShirtAdmin(admin.ModelAdmin):
-    readonly_fields = ['image_preview']
-
     fieldsets = [
         (None, {
             'fields': [
-                'image_preview',
-                'image',
+                'image_front',
+                'image_preview_front',
+                'image_back',
+                'image_preview_back',
                 'number',
                 'club',
                 'season',
@@ -281,6 +281,22 @@ class ShirtAdmin(admin.ModelAdmin):
             ]
         }),
     ]
+
+    readonly_fields = ['image_preview_front', 'image_preview_back']
+
+    def image_preview_front(self, obj):
+        if obj.image_front:
+            return format_html('<img src="{}" style="max-height: 300px;"/>', obj.image_front.url)
+        return "Kein Bild"
+
+    image_preview_front.short_description = "Vorschau Vorderseite"
+
+    def image_preview_back(self, obj):
+        if obj.image_back:
+            return format_html('<img src="{}" style="max-height: 300px;"/>', obj.image_back.url)
+        return "Kein Bild"
+
+    image_preview_back.short_description = "Vorschau Rückseite"
 
     list_display = [
         "number",

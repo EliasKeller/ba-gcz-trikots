@@ -185,7 +185,16 @@ class Match(models.Model):
 class Shirt(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     number = models.IntegerField(null=True, blank=True, verbose_name="Trikotnummer")
-    image = models.ImageField(upload_to=f"{os.getenv('CLOUDINARY_FOLDER', 'shirts_DEV')}/", verbose_name="Bild")
+    image_front = models.ImageField(
+        upload_to=f"{os.getenv('CLOUDINARY_FOLDER', 'shirts_DEV')}/",
+        verbose_name="Vorderseite",
+    )
+    image_back = models.ImageField(
+        upload_to=f"{os.getenv('CLOUDINARY_FOLDER', 'shirts_DEV')}/",
+        verbose_name="Rückseite",
+        null=True,
+        blank=True
+    )
     description = models.TextField(max_length=2000, null=True, blank=True, verbose_name="Beschreibung")
     club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name="Club")
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name="Saison")
@@ -209,17 +218,21 @@ class Shirt(models.Model):
 
     # Override DELETE => delete image on Cloudinary (DB only source of truth)
     def delete(self, *args, **kwargs):
-        if self.image:
-            cloudinary.uploader.destroy(self.image.name)
+        if self.image_front:
+            cloudinary.uploader.destroy(self.image_front.name)
+        if self.image_back:
+            cloudinary.uploader.destroy(self.image_back.name)
         super().delete(*args, **kwargs)
 
     # Override SAVE => if images changes => delete old one (DB only source of truth)
     def save(self, *args, **kwargs):
         if self.pk:
             try:
-                old_image = Shirt.objects.get(pk=self.pk).image
-                if old_image and old_image != self.image:
-                    cloudinary.uploader.destroy(old_image.name)
+                old = Shirt.objects.get(pk=self.pk)
+                if old.image_front and old.image_front != self.image_front:
+                    cloudinary.uploader.destroy(old.image_front.name)
+                if old.image_back and old.image_back != self.image_back:
+                    cloudinary.uploader.destroy(old.image_back.name)
             except Shirt.DoesNotExist:
                 pass
         super().save(*args, **kwargs)
