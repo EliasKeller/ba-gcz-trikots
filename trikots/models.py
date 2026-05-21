@@ -203,6 +203,19 @@ class Shirt(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name="Club")
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name="Saison")
     match_worn = models.BooleanField(default=False, verbose_name="Matchworn")
+
+    class ShirtType(models.TextChoices):
+        HOME = 'HOME', 'Heimtrikot'
+        AWAY = 'AWAY', 'Auswärtstrikot'
+        SPECIAL = 'SPECIAL', 'Special Edition'
+
+    shirt_type = models.CharField(
+        choices=ShirtType,
+        verbose_name="Trikottyp"
+    )
+
+    is_goal_keeper_shirt = models.BooleanField(default=False, verbose_name="Torwarttrikot")
+
     player = models.ForeignKey(
         Person,
         on_delete=models.CASCADE,
