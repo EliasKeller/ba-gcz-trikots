@@ -169,7 +169,11 @@ class Match(models.Model):
         blank=True,
         verbose_name="Torschützen"
     )
+    round_of_League = models.IntegerField(verbose_name="Runde der Liga", null=True, blank=True)
     date = models.DateField(verbose_name="Datum")
+    time = models.TimeField(verbose_name="Uhrzeit", null=True, blank=True)
+    highlight_url = models.URLField(verbose_name="Highlight URL", null=True, blank=True)
+
 
     class Meta:
         verbose_name = "Spiel"

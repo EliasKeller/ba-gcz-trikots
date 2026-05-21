@@ -23,6 +23,7 @@ else:
 # Application definition
 INSTALLED_APPS = [
     'jazzmin',
+    'bootstrap_datepicker_plus',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,14 +1,13 @@
+from bootstrap_datepicker_plus.widgets import DatePickerInput, TimePickerInput
 from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
+from django import forms
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
 from django.db.models import Count, Sum, Avg
 
 from trikots.filter import CountryFilter, LeagueFilter
 from trikots.models import Country, Club, League, Season, Person, Supplier, SeasonClub, Match, Shirt
-
-
-
 
 MAX_LIST_SIZE = 25
 SEARCH_FIELD_PREFIX_PLACEHOLDER = "Such nach "
@@ -94,16 +93,32 @@ class ClubAdmin(admin.ModelAdmin):
     search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Name und Land"
     list_per_page = MAX_LIST_SIZE
 
+class MatchAdminForm(forms.ModelForm):
+    class Media:
+        js = [
+            'https://code.jquery.com/jquery-3.7.1.min.js',
+        ]
+    class Meta:
+        model = Match
+        fields = '__all__'
+        widgets = {
+            'date': DatePickerInput(options={"locale": "de", "format": "DD.MM.YYYY"}),
+            'time': TimePickerInput(options={"locale": "de", "format": "HH:mm"}),
+        }
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
+    form = MatchAdminForm
 
     list_display = [
         "date",
+        "time",
         "home_club",
         "away_club",
         "get_goal_scorers",
+        "get_round_of_league",
         "result_colored",
+        "is_highlight_url_set"
     ]
 
     search_fields = [
@@ -111,13 +126,16 @@ class MatchAdmin(admin.ModelAdmin):
         "away_club__name",
         "goal_scorers__first_name",
         "goal_scorers__last_name",
+        "round_of_League",
     ]
 
     list_filter = [
         "date",
+        "time",
         "home_club",
         "away_club",
-        "goal_scorers"
+        "goal_scorers",
+        "round_of_League",
     ]
 
     def get_goal_scorers(self, obj):
@@ -126,6 +144,17 @@ class MatchAdmin(admin.ModelAdmin):
         )
 
     get_goal_scorers.short_description = "Torschützen"
+
+    def get_round_of_league(self, obj):
+        return format_html("<span>{}.</span>", obj.round_of_League)
+
+    get_round_of_league.short_description = "Runde"
+
+    def is_highlight_url_set(self, obj):
+        return bool(obj.highlight_url)
+
+    is_highlight_url_set.short_description = "Highlights URL"
+    is_highlight_url_set.boolean = True
 
     search_help_text = SEARCH_FIELD_PREFIX_PLACEHOLDER + "Datum, Heimclub..."
 
