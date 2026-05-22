@@ -100,7 +100,6 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
-
 class SeasonClub(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name="Saison")
@@ -132,6 +131,9 @@ class SeasonClub(models.Model):
         blank=True,
         verbose_name="Ausrüster"
     )
+    cup_result = models.CharField(null=True, blank=True, max_length=100, verbose_name="Cup Resultat")
+    championship_results = models.JSONField(default=list, null=True, blank=True, verbose_name="Internationale Resultate")
+    international_results = models.JSONField(default=list, null=True, blank=True, verbose_name="Internationale Resultate")
 
     class Meta:
         verbose_name = "Saison-Club"

@@ -8,6 +8,7 @@ from django.db.models import Count, Sum, Avg
 
 from trikots.filter import CountryFilter, LeagueFilter
 from trikots.models import Country, Club, League, Season, Person, Supplier, SeasonClub, Match, Shirt
+from trikots.widgets import ListWidget
 
 MAX_LIST_SIZE = 25
 SEARCH_FIELD_PREFIX_PLACEHOLDER = "Such nach "
@@ -198,8 +199,18 @@ class ClubAdmin(admin.ModelAdmin):
     list_per_page = MAX_LIST_SIZE
 
 
+class SeasonClubAdminForm(forms.ModelForm):
+    class Meta:
+        model = SeasonClub
+        fields = "__all__"
+        widgets = {
+            "championship_results": ListWidget(placeholder="z.B. Meister (XX Pkt.)"),
+            "international_results": ListWidget(placeholder="z.B. Europapokal"),
+        }
+
 @admin.register(SeasonClub)
 class SeasonClubAdmin(admin.ModelAdmin):
+    form = SeasonClubAdminForm
 
     list_display = [
         "season",
@@ -379,7 +390,6 @@ class ShirtAdmin(admin.ModelAdmin):
         return "Kein Bild"
 
     image_preview.short_description = "Vorschau"
-
 
 # -----------------------------
 #           DASHBOARD
