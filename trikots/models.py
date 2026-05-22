@@ -100,7 +100,6 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
-
 class SeasonClub(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name="Saison")
@@ -132,6 +131,9 @@ class SeasonClub(models.Model):
         blank=True,
         verbose_name="Ausrüster"
     )
+    cup_result = models.CharField(null=True, blank=True, max_length=100, verbose_name="Cup Resultat")
+    championship_results = models.JSONField(default=list, null=True, blank=True, verbose_name="Internationale Resultate")
+    international_results = models.JSONField(default=list, null=True, blank=True, verbose_name="Internationale Resultate")
 
     class Meta:
         verbose_name = "Saison-Club"
@@ -169,7 +171,11 @@ class Match(models.Model):
         blank=True,
         verbose_name="Torschützen"
     )
+    round_of_League = models.IntegerField(verbose_name="Runde der Liga", null=True, blank=True)
     date = models.DateField(verbose_name="Datum")
+    time = models.TimeField(verbose_name="Uhrzeit", null=True, blank=True)
+    highlight_url = models.URLField(verbose_name="Highlight URL", null=True, blank=True)
+
 
     class Meta:
         verbose_name = "Spiel"
@@ -199,6 +205,19 @@ class Shirt(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name="Club")
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name="Saison")
     match_worn = models.BooleanField(default=False, verbose_name="Matchworn")
+
+    class ShirtType(models.TextChoices):
+        HOME = 'HOME', 'Heimtrikot'
+        AWAY = 'AWAY', 'Auswärtstrikot'
+        SPECIAL = 'SPECIAL', 'Special Edition'
+
+    shirt_type = models.CharField(
+        choices=ShirtType,
+        verbose_name="Trikottyp"
+    )
+
+    is_goal_keeper_shirt = models.BooleanField(default=False, verbose_name="Torwarttrikot")
+
     player = models.ForeignKey(
         Person,
         on_delete=models.CASCADE,
